@@ -1,3 +1,4 @@
-/.env
 /helm/api-platform/charts/*
 !/helm/api-platform/charts/.gitignore
+config.bat
+node_modules
