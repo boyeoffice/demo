@@ -23,7 +23,7 @@ final class Version20240621084624 extends AbstractMigration
         $this->addSql(
             <<<EOF
                 ALTER TABLE book
-                ADD COLUMN slug TEXT UNIQUE;
+                ADD COLUMN slug TEXT UNIQUE NULL;
             EOF
         );
 

@@ -15,9 +15,14 @@ Try it online at <https://demo.api-platform.com>.
 
 [Read the official "Getting Started" guide](https://api-platform.com/docs/distribution/).
 
-    $ git clone https://github.com/api-platform/demo.git
+    $ git clone https://github.com/boyeoffice/demo.git
     $ cd demo
     $ docker compose up --wait
+    $ docker compose exec php bin/console doctrine:database:create
+    $ docker compose exec php bin/console doctrine:migrations:migrate --no-interaction
+    $ docker compose exec php bin/console doctrine:fixtures:load --no-interaction
+    $ docker compose exec php bin/console app:review
+    $ docker compose exec php bin/console app:review --month
 
 You can now go to https://localhost
 
