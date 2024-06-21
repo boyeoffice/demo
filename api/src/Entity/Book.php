@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use App\Enum\BookCondition;
+use App\Enum\BookPromotionStatus;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
@@ -163,6 +164,31 @@ class Book
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(name: '`condition`', type: 'string', enumType: BookCondition::class)]
     public ?BookCondition $condition = null;
+
+    #[ApiProperty(
+        types: ['https://schema.org/OfferItemCondition'],
+        example: 'Book-23'
+    )]
+    #[Assert\NotNull]
+    #[Assert\Unique]
+    #[Assert\Range(min: 5, max: 20)]
+    #[Assert\Regex(
+        pattern: '/^[a-z0-9-]+$/',
+        match: true,
+        message: 'The field only accept lowercase Latin letters, numbers, or hyphens'
+    )]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
+    #[ORM\Column(name: '`slug`', type: 'string')]
+    public ?string $slug = null;
+
+    #[ApiProperty(
+        types: ['https://schema.org/OfferItemCondition'],
+        example: BookPromotionStatus::PRO->value
+    )]
+    #[Assert\NotNull]
+    #[Groups(groups: ['Book:read:admin', 'Book:write'])]
+    #[ORM\Column(name: '`promotion_status`', type: 'string', enumType: BookPromotionStatus::class)]
+    public ?BookPromotionStatus $promotionStatus = null;
 
     /**
      * An IRI of reviews.

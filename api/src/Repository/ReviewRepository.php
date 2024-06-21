@@ -52,4 +52,38 @@ class ReviewRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function findMaxReviewsPeriod($month = false)
+    {
+        // $query = $this->createQueryBuilder('r')
+        //     ->select($month ? 'r.publishedAt AS month' : 'r.publishedAt AS date', 'COUNT(r) AS count')
+        //     ->groupBy($month ? 'MONTH(r.publishedAt)' : 'r.publishedAt')
+        //     ->orderBy('count', 'DESC')
+        //     ->addOrderBy($month ? 'month' : 'date', 'DESC')
+        //     ->setMaxResults(1)
+        //     ->getQuery()
+        //     ->getOneOrNullResult();
+
+        if ($month) {
+            $dateFormat = 'Y-m';
+            $groupBy = 'DATE_TRUNC(\'month\', r.published_at)';
+            $orderBy = 'MAX(r.published_at) DESC';
+        } else {
+            $dateFormat = 'Y-m-d';
+            $groupBy = 'r.published_at';
+            $orderBy = 'r.published_at DESC';
+        }
+
+        $query = $this->createQueryBuilder('r')
+            ->select($month ? 'r.publishedAt As month' : 'r.publishedAt AS date', 'COUNT(r) AS count')
+            ->groupBy('r.publishedAt')
+            ->orderBy('count', 'DESC')
+            ->addOrderBy($month ? 'month' : 'date', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+
+        return $query ? ($month ? $query['month'] : $query['date']) : null;
+    }
 }
